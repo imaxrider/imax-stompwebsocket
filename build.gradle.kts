@@ -1,12 +1,12 @@
 plugins {
-    id("com.android.library") version "9.3.0"
+    id("com.android.library") version "9.3.2"
 }
 
 version = "2.1.0"
 
 android {
     namespace = "com.imax.stompwebsocket"
-    compileSdk = 34
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 21
@@ -38,7 +38,7 @@ kotlin {
 
 dependencies {
     // OkHttp (version 5.0.0-alpha.14)
-    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.14")
+    implementation("com.squareup.okhttp3:okhttp:5.5.0")
 
     // Kotlin Coroutines Core (latest stable)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
