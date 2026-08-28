@@ -40,11 +40,17 @@ dependencies {
 }
 ```
 
-## Requirements
+## Requirements & Tech Stack
 
-- **Gradle**: `9.5.0` or higher (configured in `gradle-wrapper.properties`)
-- **Android Gradle Plugin (AGP)**: `9.3.0` or higher (configured in `build.gradle.kts`)
-- **JDK**: `17` or higher (required for AGP 9.x and Java 17 target compatibility)
+| Component | Version | Note |
+| :--- | :--- | :--- |
+| **Library Version** | `v2.1.0` | Latest release |
+| **Gradle Wrapper** | `9.5.0` | Configured in `gradle-wrapper.properties` |
+| **Android Gradle Plugin (AGP)** | `9.3.0` | Configured in `build.gradle.kts` |
+| **Compile SDK / Min SDK** | `34` / `21` | Android 5.0 (API 21)+ support |
+| **JDK Compatibility** | `17` | Java 17 target compatibility |
+| **OkHttp Engine** | `5.0.0-alpha.14` | Embedded WebSocket engine |
+| **Kotlin Coroutines** | `1.11.0` | Core coroutines & reactive flows |
 
 ### Kotlin Built-in Compilation
 This library is configured using AGP 9.x's built-in Kotlin compilation. If you are importing this project as a sub-module, ensure your root project runs on a compatible Gradle/AGP environment.
