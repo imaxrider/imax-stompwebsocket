@@ -8,7 +8,7 @@ This library provides a simple and reactive interface to communicate with STOMP 
 
 - **100% Kotlin**: Fully rewritten in idiomatic Kotlin with native null-safety and JVM compatibility.
 - **RxJava Removed**: Migrated completely to Kotlin Coroutines (`Job`, `suspend` functions) and Flows (`Flow`, `SharedFlow`, `StateFlow`).
-- **OkHttp Engine**: Directly embeds **OkHttp 5.0.0-alpha.14** as the WebSocket engine, removing deprecated alternatives (like Java-WebSocket) to minimize dependencies.
+- **OkHttp Engine**: Directly embeds **OkHttp 5.5.0** as the WebSocket engine, removing deprecated alternatives (like Java-WebSocket) to minimize dependencies.
 - **Data Classes**: Modeling STOMP messages and headers using clean Kotlin `data class` structures and type-safe `StompCommand` enum.
 - **STOMP 1.1 & 1.2 Support**: Fully compliant with STOMP specifications.
 - **Flexible Path Matching**: Supports exact destination matching (`SimplePathMatcher`), subscription-based matching (`SubscriptionPathMatcher`), and RabbitMQ-style wildcards (`RabbitPathMatcher`).
@@ -46,10 +46,10 @@ dependencies {
 | :--- | :--- | :--- |
 | **Library Version** | `v2.1.0` | Latest release |
 | **Gradle Wrapper** | `9.5.0` | Configured in `gradle-wrapper.properties` |
-| **Android Gradle Plugin (AGP)** | `9.3.0` | Configured in `build.gradle.kts` |
-| **Compile SDK / Min SDK** | `34` / `21` | Android 5.0 (API 21)+ support |
+| **Android Gradle Plugin (AGP)** | `9.3.2` | Configured in `build.gradle.kts` |
+| **Compile SDK / Min SDK** | `37` / `21` | Android 5.0 (API 21)+ support |
 | **JDK Compatibility** | `17` | Java 17 target compatibility |
-| **OkHttp Engine** | `5.0.0-alpha.14` | Embedded WebSocket engine |
+| **OkHttp Engine** | `5.5.0` | Embedded WebSocket engine |
 | **Kotlin Coroutines** | `1.11.0` | Core coroutines & reactive flows |
 
 ### Kotlin Built-in Compilation
