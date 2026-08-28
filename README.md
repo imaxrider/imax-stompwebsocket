@@ -1,4 +1,4 @@
-# imax-stompwebsocket
+# imax-stompwebsocket `v2.1.0`
 
 An Android STOMP WebSocket client library, originally written in Java, now fully migrated to **Kotlin** and optimized by **IMAX** to use **Kotlin Coroutines & Flows**.
 
@@ -16,11 +16,13 @@ This library provides a simple and reactive interface to communicate with STOMP 
 
 ## Installation
 
-Add the library to your Android project's Gradle build file:
+Add version `2.1.0` of the library to your Android project's Gradle build file:
 
 ```kotlin
 dependencies {
-    implementation(project(":imax-stompwebsocket"))
+    implementation("com.github.imaxrider:imax-stompwebsocket:2.1.0")
+    // Or as a local sub-module:
+    // implementation(project(":imax-stompwebsocket"))
 }
 ```
 
