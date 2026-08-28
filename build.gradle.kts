@@ -35,8 +35,8 @@ kotlin {
 }
 
 dependencies {
-    // OkHttp (version requested: 5.5.0)
-    implementation("com.squareup.okhttp3:okhttp:5.5.0")
+    // OkHttp (version 5.0.0-alpha.14)
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.14")
 
     // Kotlin Coroutines Core (latest stable)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")

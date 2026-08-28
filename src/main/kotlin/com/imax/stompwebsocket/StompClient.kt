@@ -306,11 +306,10 @@ class StompClient(
         val topicId = UUID.randomUUID().toString()
         val currentTopics = topics ?: ConcurrentHashMap<String, String>().also { topics = it }
 
-        if (currentTopics.containsKey(destinationPath)) {
+        val existingTopicId = currentTopics.putIfAbsent(destinationPath, topicId)
+        if (existingTopicId != null) {
             return
         }
-
-        currentTopics[destinationPath] = topicId
         val headers = ArrayList<StompHeader>()
         headers.add(StompHeader(StompHeader.ID, topicId))
         headers.add(StompHeader(StompHeader.DESTINATION, destinationPath))
