@@ -16,17 +16,29 @@ This library provides a simple and reactive interface to communicate with STOMP 
 
 ## Installation
 
-Add version `2.1.0` of the library to your Android project's Gradle build file:
+### 1. Add JitPack repository
+Add JitPack repository to your root `settings.gradle.kts`:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+```
+
+### 2. Add dependency
+Add the library dependency to your module's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.imaxrider:imax-stompwebsocket:2.1.0")
+    implementation("com.github.imaxrider:imax-stompwebsocket:v2.1.0")
     // Or as a local sub-module:
     // implementation(project(":imax-stompwebsocket"))
 }
 ```
-
-Ensure your dependency repositories contain `mavenCentral()` and `google()`.
 
 ## Requirements
 
