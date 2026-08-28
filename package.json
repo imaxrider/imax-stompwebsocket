@@ -1,0 +1,7 @@
+{
+  "name": "imax-stompwebsocket",
+  "version": "1.9.0",
+  "description": "STOMP WebSocket client modified by IMAX",
+  "author": "IMAX",
+  "license": "MIT"
+}
