@@ -9,6 +9,7 @@ android {
     defaultConfig {
         applicationId = "com.imax.stompwebsocket.sample"
         minSdk = 23
+        //noinspection EditedTargetSdkVersion
         targetSdk = 37
         versionCode = 1
         versionName = "1.0.0"
