@@ -177,6 +177,14 @@ stompClient.disconnect()
 
 ---
 
+## Credits & Acknowledgements
+
+This library is a modernized 100% Kotlin rewrite of the original [StompProtocolAndroid](https://github.com/NaikSoftware/StompProtocolAndroid) library.
+
+- Originally created by **NaikSoftware (Naver Corp)**.
+- Enhanced by **Forrest Hopkins III (forresthopkinsa)**.
+- Fully migrated to Kotlin Coroutines & Flows by **IMAX**.
+
 ## License
 
 Modified by IMAX. Distributed under the MIT License.
