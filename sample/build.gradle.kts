@@ -38,7 +38,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":imax-stompwebsocket"))
+    implementation(project(":"))
 
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
