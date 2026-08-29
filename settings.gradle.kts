@@ -14,3 +14,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "imax-stompwebsocket"
+include(":sample")
