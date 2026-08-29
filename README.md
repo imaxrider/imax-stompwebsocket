@@ -40,6 +40,10 @@ dependencies {
 }
 ```
 
+## Sample App
+
+A complete interactive sample Android application module is included in the [`:sample`](sample/README.md) directory to demonstrate real-time WebSocket connection, subscription, message sending, and reactive lifecycle event handling.
+
 ## Requirements & Tech Stack
 
 | Component | Version | Note |
