@@ -1,4 +1,4 @@
-# imax-stompwebsocket Sample App (`:sample`)
+# imax-stomp-websocket Sample App (`:sample`)
 
 This module is an interactive Android application that demonstrates how to integrate and use the **`imax-stompwebsocket`** library in a real Android project.
 
@@ -6,12 +6,12 @@ This module is an interactive Android application that demonstrates how to integ
 
 ## Features Demonstrated
 
-- 🔌 **Connection & Disconnection**: Initialize and connect to any STOMP broker over WebSocket using `Stomp.over(url)`.
-- 📊 **Reactive Lifecycle Monitoring**: Collect connection lifecycle events (`OPENED`, `CLOSED`, `ERROR`, `FAILED_SERVER_HEARTBEAT`) using `stompClient.lifecycleFlow`.
-- 🟢 **Connection State Tracking**: Observe real-time connection state using `stompClient.connectionState`.
-- 📩 **Topic Subscriptions**: Subscribe to STOMP destinations dynamically using Kotlin `Flow` (`stompClient.topic(destination)`).
-- 📤 **Sending Messages**: Send STOMP messages asynchronously using `stompClient.send(destination, payload)`.
-- 📜 **Live Console Output**: Scrollable real-time log displaying all WebSocket activity.
+- :: **Connection & Disconnection**: Initialize and connect to any STOMP broker over WebSocket using `Stomp.over(url)`.
+- :: **Reactive Lifecycle Monitoring**: Collect connection lifecycle events (`OPENED`, `CLOSED`, `ERROR`, `FAILED_SERVER_HEARTBEAT`) using `stompClient.lifecycleFlow`.
+- :: **Connection State Tracking**: Observe real-time connection state using `stompClient.connectionState`.
+- :: **Topic Subscriptions**: Subscribe to STOMP destinations dynamically using Kotlin `Flow` (`stompClient.topic(destination)`).
+- :: **Sending Messages**: Send STOMP messages asynchronously using `stompClient.send(destination, payload)`.
+- :: **Live Console Output**: Scrollable real-time log displaying all WebSocket activity.
 
 ---
 
