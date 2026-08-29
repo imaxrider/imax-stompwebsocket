@@ -15,6 +15,7 @@ import com.imax.stompwebsocket.StompClient
 import com.imax.stompwebsocket.dto.LifecycleEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import androidx.core.graphics.toColorInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -184,12 +185,12 @@ class MainActivity : AppCompatActivity() {
     private fun updateConnectionStateUi(isConnected: Boolean) {
         if (isConnected) {
             tvStatus.text = "Status: CONNECTED"
-            tvStatus.setTextColor(Color.parseColor("#4CAF50"))
+            tvStatus.setTextColor("#4CAF50".toColorInt())
             btnConnect.isEnabled = false
             btnDisconnect.isEnabled = true
         } else {
             tvStatus.text = "Status: DISCONNECTED"
-            tvStatus.setTextColor(Color.parseColor("#F44336"))
+            tvStatus.setTextColor("#F44336".toColorInt())
             btnConnect.isEnabled = true
             btnDisconnect.isEnabled = false
         }
