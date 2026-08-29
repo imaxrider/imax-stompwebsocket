@@ -1,8 +1,11 @@
 # imax-stompwebsocket `v2.1.0`
 
-An Android STOMP WebSocket client library, originally written in Java, now fully migrated to **Kotlin** and optimized by **IMAX** to use **Kotlin Coroutines & Flows**.
+> 🚀 **Android STOMP WebSocket Client Library for Kotlin**
+> A modern, reactive STOMP protocol client for Android, fully powered by **Kotlin Coroutines & Flows** and **OkHttp**. Perfect for Spring Boot WebSocket servers, RabbitMQ WebSTOMP, and ActiveMQ brokers.
 
-This library provides a simple and reactive interface to communicate with STOMP brokers over WebSockets using OkHttp directly as the WebSocket engine.
+An Android STOMP WebSocket client library, originally written in Java, now fully migrated to idiomatic **Kotlin** and optimized by **IMAX** to use **Kotlin Coroutines & Flows**.
+
+This library provides a simple, reactive, and thread-safe interface to communicate with STOMP brokers over WebSockets using OkHttp directly as the WebSocket engine.
 
 ## Features
 
