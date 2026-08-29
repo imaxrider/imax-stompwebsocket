@@ -2,6 +2,7 @@ package com.imax.stompwebsocket.sample
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ScrollView
@@ -107,14 +108,22 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // Collect lifecycle events
             lifecycleScope.launch {
-                client.lifecycleFlow.collect { event ->
-                    when (event.type) {
-                        LifecycleEvent.Type.OPENED -> log("Lifecycle: Connection OPENED")
-                        LifecycleEvent.Type.CLOSED -> log("Lifecycle: Connection CLOSED")
-                        LifecycleEvent.Type.ERROR -> log("Lifecycle: ERROR - ${event.exception?.message}")
-                        LifecycleEvent.Type.FAILED_SERVER_HEARTBEAT -> log("Lifecycle: FAILED_SERVER_HEARTBEAT")
+                client.lifecycleFlow.collect { lifecycleEvent ->
+                    when (lifecycleEvent.type) {
+                        LifecycleEvent.Type.OPENED -> {
+                            log("Lifecycle: Connection OPENED")
+                        }
+                        LifecycleEvent.Type.CLOSED -> {
+                            log("Lifecycle: Connection CLOSED")
+                        }
+                        LifecycleEvent.Type.ERROR -> {
+
+                            log("Lifecycle: ERROR - ${lifecycleEvent.exception?.message}")
+                        }
+                        LifecycleEvent.Type.FAILED_SERVER_HEARTBEAT -> {
+                            log("Lifecycle: FAILED_SERVER_HEARTBEAT")
+                        }
                     }
                 }
             }
