@@ -1,7 +1,9 @@
 package com.imax.stompwebsocket
 
+import com.imax.stompwebsocket.dto.LifecycleEvent
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -46,12 +48,15 @@ class StompClientTest {
     }
 
     @Test
-    fun `disconnect keeps connectionState false and clears topic ids`() {
+    fun `disconnect keeps connectionState false, clears topic ids, and emits CLOSED event`() = runBlocking {
         val client = Stomp.over("ws://localhost:8080/ws")
         client.disconnect()
 
         assertFalse(client.isConnected)
         assertEquals(false, client.connectionState.value)
         assertNull(client.getTopicId("/topic/chat"))
+
+        val event = withTimeout(1000) { client.lifecycleFlow.first() }
+        assertEquals(LifecycleEvent.Type.CLOSED, event.type)
     }
 }

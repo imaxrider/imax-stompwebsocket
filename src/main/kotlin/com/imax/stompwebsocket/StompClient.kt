@@ -73,7 +73,8 @@ class StompClient(
     val lifecycleFlow: SharedFlow<LifecycleEvent> = _lifecycleFlow.asSharedFlow()
 
     private val _messageFlow = MutableSharedFlow<StompMessage>(
-        extraBufferCapacity = 64
+        extraBufferCapacity = 64,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val messageFlow: SharedFlow<StompMessage> = _messageFlow.asSharedFlow()
 
@@ -101,9 +102,7 @@ class StompClient(
             },
             object : HeartBeatTask.FailedListener {
                 override fun onServerHeartBeatFailed() {
-                    scope.launch {
-                        _lifecycleFlow.emit(LifecycleEvent(LifecycleEvent.Type.FAILED_SERVER_HEARTBEAT))
-                    }
+                    _lifecycleFlow.tryEmit(LifecycleEvent(LifecycleEvent.Type.FAILED_SERVER_HEARTBEAT))
                 }
             },
             scope
@@ -134,6 +133,7 @@ class StompClient(
         }
 
         // Fresh scope for each connection session
+        scope.cancel("Starting new connection")
         scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
         
         // Re-init heartbeat task bound to the new scope
@@ -150,68 +150,45 @@ class StompClient(
 
         webSocket = mOkHttpClient.newWebSocket(requestBuilder.build(), object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
-                scope.launch {
-                    val connectHeaders = ArrayList<StompHeader>()
-                    connectHeaders.add(StompHeader(StompHeader.VERSION, SUPPORTED_VERSIONS))
-                    connectHeaders.add(
-                        StompHeader(
-                            StompHeader.HEART_BEAT,
-                            "${heartBeatTask.getClientHeartbeat()},${heartBeatTask.getServerHeartbeat()}"
-                        )
+                val connectHeaders = ArrayList<StompHeader>()
+                connectHeaders.add(StompHeader(StompHeader.VERSION, SUPPORTED_VERSIONS))
+                connectHeaders.add(
+                    StompHeader(
+                        StompHeader.HEART_BEAT,
+                        "${heartBeatTask.getClientHeartbeat()},${heartBeatTask.getServerHeartbeat()}"
                     )
-                    _headers?.let { connectHeaders.addAll(it) }
+                )
+                _headers?.let { connectHeaders.addAll(it) }
 
-                    val connectFrame = StompMessage(StompCommand.CONNECT, connectHeaders, null).compile(legacyWhitespace)
-                    webSocket.send(connectFrame)
+                val connectFrame = StompMessage(StompCommand.CONNECT, connectHeaders, null).compile(legacyWhitespace)
+                webSocket.send(connectFrame)
 
-                    val openedEvent = LifecycleEvent(LifecycleEvent.Type.OPENED)
-                    val headersMap = TreeMap<String, String>()
-                    for (name in response.headers.names()) {
-                        headersMap[name] = response.headers[name] ?: ""
-                    }
-                    openedEvent.handshakeResponseHeaders = headersMap
-                    _lifecycleFlow.emit(openedEvent)
+                val openedEvent = LifecycleEvent(LifecycleEvent.Type.OPENED)
+                val headersMap = TreeMap<String, String>()
+                for (name in response.headers.names()) {
+                    headersMap[name] = response.headers[name] ?: ""
                 }
+                openedEvent.handshakeResponseHeaders = headersMap
+                _lifecycleFlow.tryEmit(openedEvent)
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
-                val message = StompMessage.from(text)
-                if (heartBeatTask.consumeHeartBeat(message)) {
-                    scope.launch {
-                        _messageFlow.emit(message)
-                    }
-                }
-                if (message.command == StompCommand.CONNECTED) {
-                    _connectionState.value = true
-                }
+                handleIncomingMessage(text)
             }
 
             override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-                val text = bytes.utf8()
-                val message = StompMessage.from(text)
-                if (heartBeatTask.consumeHeartBeat(message)) {
-                    scope.launch {
-                        _messageFlow.emit(message)
-                    }
-                }
-                if (message.command == StompCommand.CONNECTED) {
-                    _connectionState.value = true
-                }
+                handleIncomingMessage(bytes.utf8())
             }
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 _connectionState.value = false
-                scope.launch {
-                    _lifecycleFlow.emit(LifecycleEvent(LifecycleEvent.Type.CLOSED))
-                }
+                _lifecycleFlow.tryEmit(LifecycleEvent(LifecycleEvent.Type.CLOSED))
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 _connectionState.value = false
-                scope.launch {
-                    _lifecycleFlow.emit(LifecycleEvent(LifecycleEvent.Type.ERROR, Exception(t)))
-                    _lifecycleFlow.emit(LifecycleEvent(LifecycleEvent.Type.CLOSED))
-                }
+                _lifecycleFlow.tryEmit(LifecycleEvent(LifecycleEvent.Type.ERROR, Exception(t)))
+                _lifecycleFlow.tryEmit(LifecycleEvent(LifecycleEvent.Type.CLOSED))
             }
 
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
@@ -247,6 +224,16 @@ class StompClient(
         }
     }
 
+    private fun handleIncomingMessage(text: String) {
+        val message = StompMessage.from(text)
+        if (heartBeatTask.consumeHeartBeat(message)) {
+            _messageFlow.tryEmit(message)
+        }
+        if (message.command == StompCommand.CONNECTED) {
+            _connectionState.value = true
+        }
+    }
+
     private fun sendHeartBeat(pingMessage: String) {
         scope.launch {
             connectionState.first { isConnected -> isConnected }
@@ -264,9 +251,7 @@ class StompClient(
         webSocket?.close(1000, "Disconnect called")
         webSocket = null
         _connectionState.value = false
-        scope.launch {
-            _lifecycleFlow.emit(LifecycleEvent(LifecycleEvent.Type.CLOSED))
-        }
+        _lifecycleFlow.tryEmit(LifecycleEvent(LifecycleEvent.Type.CLOSED))
         scope.cancel("Disconnect called")
         topics?.clear()
         streamMap.clear()
