@@ -131,7 +131,6 @@ class HeartBeatTask(
                 failedListener?.onServerHeartBeatFailed()
             } else {
                 Log.d(TAG, "We were checking and server sent heart-beat on time. So well-behaved :)")
-                lastServerHeartBeat = System.currentTimeMillis()
                 scheduleServerHeartBeatCheck()
             }
         }
