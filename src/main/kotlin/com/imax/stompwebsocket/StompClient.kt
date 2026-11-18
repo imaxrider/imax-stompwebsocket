@@ -18,7 +18,6 @@
 
 package com.imax.stompwebsocket
 
-import android.util.Log
 import com.imax.stompwebsocket.dto.LifecycleEvent
 import com.imax.stompwebsocket.dto.StompCommand
 import com.imax.stompwebsocket.dto.StompHeader
@@ -83,6 +82,7 @@ class StompClient(
 
     private val streamMap = ConcurrentHashMap<String, Flow<StompMessage>>()
     private var pathMatcher: PathMatcher = SimplePathMatcher()
+    private var logger: StompLogger = Stomp.logger
     private var headers: List<StompHeader>? = null
     private var webSocket: WebSocket? = null
 
@@ -105,8 +105,14 @@ class StompClient(
                     _lifecycleFlow.tryEmit(LifecycleEvent(LifecycleEvent.Type.FAILED_SERVER_HEARTBEAT))
                 }
             },
-            scope
+            scope,
+            logger
         )
+    }
+
+    fun withLogger(logger: StompLogger): StompClient {
+        this.logger = logger
+        return this
     }
 
     fun withServerHeartbeat(ms: Int): StompClient {
@@ -124,11 +130,11 @@ class StompClient(
     }
 
     fun connect(_headers: List<StompHeader>?) {
-        Log.d(TAG, "Connect")
+        logger.d(TAG, "Connect")
         this.headers = _headers
 
         if (isConnected) {
-            Log.d(TAG, "Already connected, ignore")
+            logger.d(TAG, "Already connected, ignore")
             return
         }
 
@@ -300,7 +306,7 @@ class StompClient(
         headers.add(StompHeader(StompHeader.DESTINATION, destinationPath))
         headers.add(StompHeader(StompHeader.ACK, DEFAULT_ACK))
 
-        Log.d(TAG, "subscribed path! $topicId")
+        logger.d(TAG, "subscribed path! $topicId")
 
         if (headerList != null) {
             headers.addAll(headerList)
@@ -312,7 +318,7 @@ class StompClient(
         val currentTopics = topics ?: return
         val topicId = currentTopics.remove(dest) ?: return
 
-        Log.i(TAG, "Unsubscribed: $dest")
+        logger.i(TAG, "Unsubscribed: $dest")
         try {
             send(
                 StompMessage(
@@ -322,7 +328,7 @@ class StompClient(
                 )
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Error unsubscribing path", e)
+            logger.e(TAG, "Error unsubscribing path", e)
         }
     }
 

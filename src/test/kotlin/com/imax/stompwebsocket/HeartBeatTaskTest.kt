@@ -119,4 +119,33 @@ class HeartBeatTaskTest {
         withTimeout(1500) { failed.await() }
         task.shutdown()
     }
+
+    @Test
+    fun `malformed heartbeat header does not throw NumberFormatException`() {
+        val logs = mutableListOf<String>()
+        val customLogger = object : StompLogger {
+            override fun d(tag: String, message: String) {
+                logs.add(message)
+            }
+        }
+        val task = HeartBeatTask(
+            sendCallback = object : HeartBeatTask.SendCallback {
+                override fun sendClientHeartBeat(pingMessage: String) {}
+            },
+            failedListener = null,
+            scope = scope,
+            logger = customLogger
+        )
+
+        task.setClientHeartbeat(5000)
+        task.setServerHeartbeat(5000)
+        val malformedConnected = StompMessage(
+            StompCommand.CONNECTED,
+            listOf(StompHeader(StompHeader.HEART_BEAT, "abc,xyz")),
+            null
+        )
+
+        assertTrue(task.consumeHeartBeat(malformedConnected))
+        task.shutdown()
+    }
 }

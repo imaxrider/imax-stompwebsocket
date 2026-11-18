@@ -18,7 +18,6 @@
 
 package com.imax.stompwebsocket
 
-import android.util.Log
 import com.imax.stompwebsocket.dto.StompCommand
 import com.imax.stompwebsocket.dto.StompHeader
 import com.imax.stompwebsocket.dto.StompMessage
@@ -33,7 +32,8 @@ import kotlin.time.Duration.Companion.milliseconds
 class HeartBeatTask(
     private val sendCallback: SendCallback,
     private val failedListener: FailedListener?,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
+    private val logger: StompLogger = Stomp.logger
 ) {
 
     private var serverHeartbeat = 0
@@ -73,7 +73,7 @@ class HeartBeatTask(
             }
             StompCommand.UNKNOWN -> {
                 if ("\n" == message.payload) {
-                    Log.d(TAG, "<<< PONG")
+                    logger.d(TAG, "<<< PONG")
                     abortServerHeartBeatCheck()
                     return false
                 }
@@ -92,20 +92,22 @@ class HeartBeatTask(
     private fun heartBeatHandshake(heartBeatHeader: String?) {
         if (heartBeatHeader != null) {
             val heartbeats = heartBeatHeader.split(",")
-            if (clientHeartbeatNew > 0 && heartbeats.size > 1) {
-                clientHeartbeat = max(clientHeartbeatNew, heartbeats[1].toInt())
+            val serverWrite = heartbeats.getOrNull(0)?.trim()?.toIntOrNull()
+            val serverRead = heartbeats.getOrNull(1)?.trim()?.toIntOrNull()
+            if (clientHeartbeatNew > 0 && serverRead != null) {
+                clientHeartbeat = max(clientHeartbeatNew, serverRead)
             }
-            if (serverHeartbeatNew > 0 && heartbeats.isNotEmpty()) {
-                serverHeartbeat = max(serverHeartbeatNew, heartbeats[0].toInt())
+            if (serverHeartbeatNew > 0 && serverWrite != null) {
+                serverHeartbeat = max(serverHeartbeatNew, serverWrite)
             }
         }
         if (clientHeartbeat > 0 || serverHeartbeat > 0) {
             if (clientHeartbeat > 0) {
-                Log.d(TAG, "Client will send heart-beat every $clientHeartbeat ms")
+                logger.d(TAG, "Client will send heart-beat every $clientHeartbeat ms")
                 scheduleClientHeartBeat()
             }
             if (serverHeartbeat > 0) {
-                Log.d(TAG, "Client will listen to server heart-beat every $serverHeartbeat ms")
+                logger.d(TAG, "Client will listen to server heart-beat every $serverHeartbeat ms")
                 lastServerHeartBeat = System.currentTimeMillis()
                 scheduleServerHeartBeatCheck()
             }
@@ -127,10 +129,10 @@ class HeartBeatTask(
             val now = System.currentTimeMillis()
             val boundary = now - (3 * serverHeartbeat)
             if (lastServerHeartBeat < boundary) {
-                Log.d(TAG, "It's a sad day ;( Server didn't send heart-beat on time. Last received at '$lastServerHeartBeat' and now is '$now'")
+                logger.d(TAG, "It's a sad day ;( Server didn't send heart-beat on time. Last received at '$lastServerHeartBeat' and now is '$now'")
                 failedListener?.onServerHeartBeatFailed()
             } else {
-                Log.d(TAG, "We were checking and server sent heart-beat on time. So well-behaved :)")
+                logger.d(TAG, "We were checking and server sent heart-beat on time. So well-behaved :)")
                 scheduleServerHeartBeatCheck()
             }
         }
@@ -153,7 +155,7 @@ class HeartBeatTask(
 
     private fun sendClientHeartBeat() {
         sendCallback.sendClientHeartBeat("\r\n")
-        Log.d(TAG, "PING >>>")
+        logger.d(TAG, "PING >>>")
         scheduleClientHeartBeat()
     }
 

@@ -18,10 +18,13 @@
 
 package com.imax.stompwebsocket
 
-import android.util.Log
 import okhttp3.OkHttpClient
 
 object Stomp {
+
+    @JvmStatic
+    @Volatile
+    var logger: StompLogger = StompLogger.ANDROID
 
     @Deprecated("JWS is deprecated. Use over(uri, headers, client) instead.")
     @JvmStatic
@@ -48,7 +51,7 @@ object Stomp {
         okHttpClient: OkHttpClient?
     ): StompClient {
         if (connectionProvider == ConnectionProvider.JWS) {
-            Log.w("Stomp", "JWS connection provider is deprecated and not supported. OkHttp client will be used.")
+            logger.w("Stomp", "JWS connection provider is deprecated and not supported. OkHttp client will be used.")
         }
         val client = okHttpClient ?: OkHttpClient()
         return StompClient(uri, connectHttpHeaders, client)

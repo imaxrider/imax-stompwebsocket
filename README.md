@@ -1,4 +1,4 @@
-# imax-stomp-websocket `v2.1.0`
+# imax-stomp-websocket `v2.2.0`
 
 > **Android STOMP WebSocket Client Library for Kotlin**
 
@@ -36,7 +36,7 @@ Add the library dependency to your module's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.imaxrider:imax-stompwebsocket:v2.1.0")
+    implementation("com.github.imaxrider:imax-stompwebsocket:v2.2.0")
     // Or as a local sub-module:
     // implementation(project(":imax-stompwebsocket"))
 }
@@ -50,7 +50,7 @@ A complete interactive sample Android application module is included in the [`:s
 
 | Component | Version | Note |
 | :--- | :--- | :--- |
-| **Library Version** | `v2.1.0` | Latest release |
+| **Library Version** | `v2.2.0` | Latest release |
 | **Gradle Wrapper** | `9.5.0` | Configured in `gradle-wrapper.properties` |
 | **Android Gradle Plugin (AGP)** | `9.3.2` | Configured in `build.gradle.kts` |
 | **Compile SDK / Min SDK** | `37` / `21` | Android 5.0 (API 21)+ support |

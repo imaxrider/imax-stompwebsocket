@@ -2,7 +2,7 @@ plugins {
     id("com.android.library") version "9.3.2"
 }
 
-version = "2.1.0"
+version = "2.2.0"
 
 android {
     namespace = "com.imax.stompwebsocket"
